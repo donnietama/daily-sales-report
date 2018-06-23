@@ -9,6 +9,12 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ route('report') }}">Lihat Laporan</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('recipe') }}">Data Produk</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('showRecipeForm') }}">Tambah Data Produk</a>
+        </li>
     </ul>
     <ul class="navbar-nav ml-auto">
         <!-- Authentication Links -->
