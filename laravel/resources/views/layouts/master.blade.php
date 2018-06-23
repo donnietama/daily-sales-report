@@ -7,9 +7,12 @@
     <title>Sales Report</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body>
-    @yield('content')
+    <div id="app">
+        @yield('content')
+    </div>
+    
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
