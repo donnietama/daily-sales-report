@@ -47474,6 +47474,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -47493,6 +47494,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         deleteRow: function deleteRow(index) {
             this.ingredients.splice(index, 1);
+        },
+        submit: function submit() {
+            // adding the token to axios header.
+            var token = document.head.querySelector('meta[name="csrf-token"]');
+            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+
+            axios({
+                method: 'post',
+                url: 'http://localhost:8000/recipe',
+                data: {
+                    product: data.product,
+                    ingredients: data.ingredients[{
+                        ingredient: data.ingredient,
+                        quantity: data.quantity
+                    }]
+                }
+            }).then();
         }
     }
 });
@@ -47505,7 +47523,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("form", { attrs: { action: "#", method: "post" } }, [
+  return _c("form", [
     _c(
       "div",
       { staticClass: "input-wrapper" },
@@ -47651,6 +47669,21 @@ var render = function() {
             on: { click: _vm.addRow }
           },
           [_vm._v("Tambahkan komposisi")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-outline-success",
+            attrs: { type: "submit" },
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.submit($event)
+              }
+            }
+          },
+          [_vm._v("Submit")]
         )
       ])
     ])

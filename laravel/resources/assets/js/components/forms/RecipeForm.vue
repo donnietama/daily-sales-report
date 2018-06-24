@@ -1,5 +1,5 @@
 <template>
-    <form action="#" method="post">
+    <form>
         <div class="input-wrapper">
             <div class="row">
                 <div class="col-md-6">
@@ -34,6 +34,7 @@
         <div class="row">
             <div class="col-md-12">
                 <button type="button" class="btn btn-outline-primary" @click="addRow">Tambahkan komposisi</button>
+                <button type="submit" class="btn btn-outline-success" @submit.prevent="submit">Submit</button>
             </div>
         </div>
     </form>
@@ -55,8 +56,29 @@ export default {
                 quantity: ''
             })
         },
+
         deleteRow(index) {
             this.ingredients.splice(index, 1)
+        },
+
+        submit() {
+            // adding the token to axios header.
+            var token = document.head.querySelector('meta[name="csrf-token"]');
+            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+
+            axios({
+                method: 'post',
+                url: 'http://localhost:8000/recipe',
+                data: {
+                    product: data.product,
+                    ingredients: data.ingredients [{
+                            ingredient: data.ingredient,
+                            quantity: data.quantity
+                        }
+                    ]
+                }
+            })
+            .then()
         }
     }
 }

@@ -27,4 +27,5 @@ Route::get('/report/exportPdf', 'ReportController@exportPDF')->middleware('auth'
 // Product and recipe management
 Route::get('/recipe/view', 'RecipeController@index')->name('recipe');
 Route::get('/recipe/add', 'RecipeController@showRecipeForm')->name('showRecipeForm');
+Route::post('/recipe', 'RecipeController@addProductAndRecipe')->name('submitRecipe');
 Route::post('/recipe/{productCode}', 'RecipeController@deleteProductAndRecipe')->name('deleteProductAndRecipe');
