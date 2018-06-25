@@ -39,7 +39,7 @@ class RecipeController extends Controller
         // add product.
         $productResource = new Product;
         $productResource->product_code = $productCode;
-        $productResource->product_name = $request->product_name;
+        $productResource->product_name = $request->product;
         $productResource->accountability = Auth::user()->name;
 
         if ($productResource->save()) // if product resource inserted, add recipe.
