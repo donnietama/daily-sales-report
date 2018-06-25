@@ -5,22 +5,22 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="product_name">Nama produk</label>
-                        <input type="text" v-model="product" id="product_name" class="form-control" placeholder="Nama produk">
+                        <input type="text" v-model="recipe.product" id="product_name" class="form-control" placeholder="Nama produk">
                     </div>
                 </div>
             </div>
-            <div class="row" v-for="(ingredient, index) in ingredients"
-            :key="ingredient.index">
+            <div class="row" v-for="(recipe, index) in recipe.ingredients"
+            :key="recipe.index">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="ingredient">Komposisi</label>
-                        <input type="text" v-model="ingredient.ingredient" id="ingredient" class="form-control" placeholder="Komposisi">
+                        <input type="text" v-model="recipe.ingredient" id="ingredient" class="form-control" placeholder="Komposisi">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="quantity">Kuantitas</label>
-                        <input type="number" v-model="ingredient.quantity" id="quantity" class="form-control" placeholder="Kuantitas">
+                        <input type="number" v-model="recipe.quantity" id="quantity" class="form-control" placeholder="Kuantitas">
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -44,21 +44,23 @@
 export default {
     data() {
         return {
-            product: '',
-            ingredients: []
+            recipe: {
+                product: '',
+                ingredients: []
+            }
         }
     },
 
     methods: {
         addRow() {
-            this.ingredients.push({
+            this.recipe.ingredients.push({
                 ingredient: '',
                 quantity: ''
             })
         },
 
         deleteRow(index) {
-            this.ingredients.splice(index, 1)
+            this.recipe.ingredients.splice(index, 1)
         },
 
         submit() {
@@ -66,19 +68,12 @@ export default {
             var token = document.head.querySelector('meta[name="csrf-token"]');
             window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 
-            axios({
-                method: 'post',
-                url: 'http://localhost:8000/recipe',
-                data: {
-                    product: data.product,
-                    ingredients: data.ingredients [{
-                            ingredient: data.ingredient,
-                            quantity: data.quantity
-                        }
-                    ]
+            axios.post('http://localhost:8000/recipe', [this.recipe], {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 }
             })
-            .then()
+            .then(response => 200)
         }
     }
 }
