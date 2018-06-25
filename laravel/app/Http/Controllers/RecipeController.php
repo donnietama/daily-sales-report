@@ -23,9 +23,10 @@ class RecipeController extends Controller
 
     public function addProductAndRecipe(Request $request)
     {
+        return $request;
         // do validation.
         $validation = $this->validate($request, [
-            'product_name' => 'string|required',
+            'product' => 'string|required',
             'ingredient' => 'string|required',
             'quantity' => 'numeric|required',
         ]);

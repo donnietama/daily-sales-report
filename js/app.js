@@ -47479,38 +47479,51 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            product: '',
-            ingredients: []
+            recipe: {
+                product: '',
+                ingredients: [{}]
+            }
         };
     },
 
 
     methods: {
         addRow: function addRow() {
-            this.ingredients.push({
+            this.recipe.ingredients.push({
                 ingredient: '',
                 quantity: ''
             });
         },
         deleteRow: function deleteRow(index) {
-            this.ingredients.splice(index, 1);
+            this.recipe.ingredients.splice(index, 1);
         },
         submit: function submit() {
+            var _this = this;
+
             // adding the token to axios header.
             var token = document.head.querySelector('meta[name="csrf-token"]');
             window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 
-            axios({
-                method: 'post',
-                url: 'http://localhost:8000/recipe',
-                data: {
-                    product: data.product,
-                    ingredients: data.ingredients[{
-                        ingredient: data.ingredient,
-                        quantity: data.quantity
-                    }]
+            var ingredientsArr = [];
+            for (var i = 0; i < this.recipe.ingredients.length; i++) {
+                ingredientsArr = this.recipe.ingredients[i];
+            }
+
+            // post data to server
+            axios.post('http://localhost/recipe', {
+                product: this.recipe.product,
+                ingredients: ingredientsArr.ingredient,
+                quantity: ingredientsArr.quantity
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
-            }).then();
+            }).then(function (response) {
+                return console.log(_this.response);
+            }) // throw response if success
+            .catch(function (error) {
+                return console.log(_this.error);
+            }); // throw error if error
         }
     }
 });
@@ -47523,7 +47536,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("form", [
+  return _c("form", { attrs: { method: "post" } }, [
     _c(
       "div",
       { staticClass: "input-wrapper" },
@@ -47540,23 +47553,24 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.product,
-                    expression: "product"
+                    value: _vm.recipe.product,
+                    expression: "recipe.product"
                   }
                 ],
                 staticClass: "form-control",
                 attrs: {
                   type: "text",
+                  name: "product_name",
                   id: "product_name",
                   placeholder: "Nama produk"
                 },
-                domProps: { value: _vm.product },
+                domProps: { value: _vm.recipe.product },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.product = $event.target.value
+                    _vm.$set(_vm.recipe, "product", $event.target.value)
                   }
                 }
               })
@@ -47564,8 +47578,8 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm._l(_vm.ingredients, function(ingredient, index) {
-          return _c("div", { key: ingredient.index, staticClass: "row" }, [
+        _vm._l(_vm.recipe.ingredients, function(recipe, index) {
+          return _c("div", { key: recipe.index, staticClass: "row" }, [
             _c("div", { staticClass: "col-md-6" }, [
               _c("div", { staticClass: "form-group" }, [
                 _c("label", { attrs: { for: "ingredient" } }, [
@@ -47577,23 +47591,24 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: ingredient.ingredient,
-                      expression: "ingredient.ingredient"
+                      value: recipe.ingredient,
+                      expression: "recipe.ingredient"
                     }
                   ],
                   staticClass: "form-control",
                   attrs: {
                     type: "text",
+                    name: "ingredient",
                     id: "ingredient",
                     placeholder: "Komposisi"
                   },
-                  domProps: { value: ingredient.ingredient },
+                  domProps: { value: recipe.ingredient },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.$set(ingredient, "ingredient", $event.target.value)
+                      _vm.$set(recipe, "ingredient", $event.target.value)
                     }
                   }
                 })
@@ -47611,23 +47626,24 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: ingredient.quantity,
-                      expression: "ingredient.quantity"
+                      value: recipe.quantity,
+                      expression: "recipe.quantity"
                     }
                   ],
                   staticClass: "form-control",
                   attrs: {
                     type: "number",
+                    name: "quantity",
                     id: "quantity",
                     placeholder: "Kuantitas"
                   },
-                  domProps: { value: ingredient.quantity },
+                  domProps: { value: recipe.quantity },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.$set(ingredient, "quantity", $event.target.value)
+                      _vm.$set(recipe, "quantity", $event.target.value)
                     }
                   }
                 })
@@ -47675,13 +47691,8 @@ var render = function() {
           "button",
           {
             staticClass: "btn btn-outline-success",
-            attrs: { type: "submit" },
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                return _vm.submit($event)
-              }
-            }
+            attrs: { type: "button" },
+            on: { click: _vm.submit }
           },
           [_vm._v("Submit")]
         )
