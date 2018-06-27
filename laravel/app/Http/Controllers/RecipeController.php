@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Recipe;
 
+use Validator;
+use Auth;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -23,34 +26,32 @@ class RecipeController extends Controller
 
     public function addProductAndRecipe(Request $request)
     {
-        return $request;
         // do validation.
-        $validation = $this->validate($request, [
+        $validation = Validator::make($request->all(), [
             'product' => 'string|required',
-            'ingredient' => 'string|required',
-            'quantity' => 'numeric|required',
+            'ingredients.*.ingredient' => 'string|required',
+            'ingredients.*.quantity' => 'numeric|required',
         ]);
        
         // if validation not passed, redirect back with errors.
         $validation ?: redirect()->back()->withErrors($validation);
 
-        // generate unique product codes.
-        $productCode = '#' . strtoupper(randString(5));
-
         // add product.
         $productResource = new Product;
-        $productResource->product_code = $productCode;
+        $productResource->product_code = $request->product_code;
         $productResource->product_name = $request->product;
         $productResource->accountability = Auth::user()->name;
 
         if ($productResource->save()) // if product resource inserted, add recipe.
         {
             // add recipe.
-            $recipeResource = new Recipe;
-            $recipeResource->product_code = $productCode;
-            $recipeResource->ingredient = $request->ingredient;
-            $recipeResource->quantity = $request->quantity;
-            $recipeResource->accountability = Auth::user()->name;
+            foreach ($request->ingredients as $recipe) {
+                $recipeResource = new Recipe;
+                $recipeResource->product_code = $request->product_code;
+                $recipeResource->accountability = Auth::user()->name;
+                $recipeResource->ingredient = $recipe['ingredient'];
+                $recipeResource->quantity = $recipe['quantity'];
+            }
             
             if ($recipeResource->save()) // if recipe resource inserted, redirect back with message.
             {

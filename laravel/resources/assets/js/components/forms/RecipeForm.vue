@@ -5,11 +5,11 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="product_name">Nama produk</label>
-                        <input type="text" v-model="recipe.product" name="product_name" id="product_name" class="form-control" placeholder="Nama produk">
+                        <input type="text" v-model="product" name="product_name" id="product_name" class="form-control" placeholder="Nama produk">
                     </div>
                 </div>
             </div>
-            <div class="row" v-for="(recipe, index) in recipe.ingredients"
+            <div class="row" v-for="(recipe, index) in ingredients"
             :key="recipe.index">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -26,7 +26,7 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="btn">Hapus</label>
-                        <button type="button" class="btn btn-outline-danger" @click="deleteRow(index)">Hapus komposisi</button>
+                        <button type="button" class="btn btn-outline-danger" @click="deleteRow(recipe.index)">Hapus komposisi</button>
                     </div>
                 </div>
             </div>
@@ -42,25 +42,25 @@
 
 <script>
 export default {
+
     data() {
         return {
-            recipe: {
-                product: '',
-                ingredients: [{}]
-            }
+            product_code: '#' + Math.floor(1000 + Math.random() * 9000),// Generate unique id,
+            product: '',
+            ingredients: []
         }
     },
 
     methods: {
         addRow() {
-            this.recipe.ingredients.push({
+            this.ingredients.push({
                 ingredient: '',
                 quantity: ''
             })
         },
 
         deleteRow(index) {
-            this.recipe.ingredients.splice(index, 1)
+            this.ingredients.splice(index, 1)
         },
 
         submit() {
@@ -68,24 +68,10 @@ export default {
             var token = document.head.querySelector('meta[name="csrf-token"]')
             window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content
 
-            let ingredientsArr = []
-            for (let i = 0; i < this.recipe.ingredients.length; i++) {
-                ingredientsArr = this.recipe.ingredients[i]
-            }
-
             // post data to server
-            axios.post('http://localhost/recipe', {
-                product: this.recipe.product,
-                ingredients: ingredientsArr.ingredient,
-                quantity: ingredientsArr.quantity,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            })
-            .then(response => console.log(this.response)) // throw response if success
-            .catch(error => console.log(this.error)) // throw error if error
+            axios.post('http://localhost/recipe', this.$data)
+            .then(response => console.log(response)) // throw response if success
+            .catch(error => console.log(error)) // throw error if error
         }
     }
 }
