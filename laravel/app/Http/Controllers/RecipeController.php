@@ -66,7 +66,7 @@ class RecipeController extends Controller
             
             if ($storeRecipe === true) // if recipe resource inserted, redirect back with message.
             {
-                return redirect()->back()->with(['message' => 'Produk baru telah ditambahkan!']);
+                return 'Produk baru telah ditambahkan!';
             }
         }
     }
