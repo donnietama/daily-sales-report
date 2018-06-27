@@ -45,7 +45,6 @@ export default {
 
     data() {
         return {
-            product_code: '#' + Math.floor(1000 + Math.random() * 9000),// Generate unique id,
             product: '',
             ingredients: []
         }
