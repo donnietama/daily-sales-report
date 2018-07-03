@@ -45,6 +45,7 @@ class RecipeController extends Controller
         $productResource = new Product;
         $productResource->product_code = $product_code;
         $productResource->product_name = $request->product;
+        $productResource->size = $request->size;
         $productResource->accountability = Auth::user()->name;
 
         if ($productResource->save()) // if product resource inserted, add recipe.
@@ -67,6 +68,10 @@ class RecipeController extends Controller
             if ($storeRecipe === true) // if recipe resource inserted, redirect back with message.
             {
                 return 'Produk baru telah ditambahkan!';
+            }
+            else
+            {
+                return 'Input data gagal, silahkan hubungi admin. Error Code:';
             }
         }
     }
