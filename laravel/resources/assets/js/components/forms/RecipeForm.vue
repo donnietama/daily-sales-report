@@ -8,8 +8,19 @@
                         <input type="text" v-model="product" name="product_name" id="product_name" class="form-control" placeholder="Nama produk">
                     </div>
                 </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="size">Ukuran</label>
+                        <select v-model="size" name="size" id="size" class="form-control">
+                            <option value="" selected hidden>ukuran</option>
+                            <option value="regular">Regular</option>
+                            <option value="large">Large</option>
+                            <option value="hot">Hot</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="row" v-for="(recipe, index) in ingredients"
+            <div class="row" v-for="(recipe) in ingredients"
             :key="recipe.index">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -46,6 +57,7 @@ export default {
     data() {
         return {
             product: '',
+            size: '',
             ingredients: []
         }
     },
@@ -69,7 +81,24 @@ export default {
 
             // post data to server
             axios.post('http://localhost/recipe', this.$data)
-            .then(response => console.log(response)) // throw response if success
+            .then(function (response) {
+                if (response.status === 200) {
+                    swal({
+                        title: 'Berhasil!',
+                        text: response.data,
+                        type: 'success',
+                        confirmButtonText: 'OK'
+                    })
+                }
+                else {
+                    swal({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: response.data + ' [' + response.status + ']',
+                        footer: '<a href="#">Kenapa saya melihat ini ?</a>'
+                    })
+                }
+            }) // throw response if success
             .catch(error => console.log(error)) // throw error if error
         }
     }

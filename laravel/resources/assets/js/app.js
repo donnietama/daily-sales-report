@@ -8,6 +8,7 @@
 require('./bootstrap')
 
 var $ = require('jquery')
+window.swal = require('sweetalert2')
 
 window.Vue = require('vue')
 
